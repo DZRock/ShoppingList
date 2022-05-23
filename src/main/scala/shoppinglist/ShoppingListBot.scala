@@ -36,12 +36,13 @@ class ShoppingListBot(val token: String) extends TelegramBot with Polling with C
     val item = msg.text
       .map { it => it.substring(it.indexOf(" ") + 1) }
       .map { it =>
-        list += it
         it
+          .split(",")
+          .map{s => list +=s.trim}
       }
     item match {
       case Some(x) => reply(
-        s"Ok, new item: <b>$x</b>",
+        s"Ok, new item: ${x.map{s => s"<b>$s</b>"}.mkString(",")}",
         parseMode = ParseMode.HTML.some,
         replyToMessageId = msg.messageId.some
       ).void
